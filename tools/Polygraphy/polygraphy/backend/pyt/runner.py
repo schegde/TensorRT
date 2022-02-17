@@ -49,7 +49,7 @@ class PytRunner(BaseRunner):
         self.output_names = output_names
 
     def activate_impl(self):
-        self.model, _ = util.invoke_if_callable(self._model)
+        self.model  = self._model
         self.model.eval()
 
     def get_input_metadata_impl(self):
@@ -62,13 +62,16 @@ class PytRunner(BaseRunner):
                 for (val, (dtype, _)) in zip(feed_dict.values(), self.input_metadata.values())
             ]
             start = time.time()
-            outputs = self.model(*inputs)
+            outputs = [self.model(*inputs)]
             end = time.time()
 
         out_dict = OrderedDict()
         for name, output in zip(self.output_names, outputs):
             out_dict[name] = output.cpu().numpy()
-        return out_dict, end - start
+        
+        self.inference_time = end - start
+        
+        return out_dict
 
     def deactivate_impl(self):
         del self.model
