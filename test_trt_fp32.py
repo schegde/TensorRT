@@ -12,8 +12,8 @@ from polygraphy.comparator.data_loader import DataLoader
 import sys
 
 # Loaders
-parse_network_from_onnx = NetworkFromOnnxPath('/objdet/TensorRT/resnet50_quant.onnx')
-create_trt_config = CreateTrtConfig(max_workspace_size=100000000, int8=True)
+parse_network_from_onnx = NetworkFromOnnxPath('./resnet50_fp32.onnx')
+create_trt_config = CreateTrtConfig(max_workspace_size=100000000, fp16=True)
 build_engine = EngineFromNetwork(parse_network_from_onnx, config=create_trt_config)
 
 # Runners
