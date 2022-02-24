@@ -33,13 +33,13 @@ model = torchvision.models.resnet50(pretrained=False, progress=False)
 model.eval()
 model.cuda()
 
-batch_size = 16
-ONNX_FILE = "resnet50_quant.onnx"
+batch_size = 1
+ONNX_FILE = "resnet50_quant_batch1.onnx"
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 state_dict = torch.load("/objdet/TensorRT/tools/pytorch-quantization/examples/quant_resnet50-calibrated.pth", map_location=device)
 model.load_state_dict(state_dict)
 
 
-dummy_input = torch.randn([16, 3, 224, 224], device=device)
+dummy_input = torch.randn([batch_size, 3, 224, 224], device=device)
 torch.onnx.export(model, dummy_input, ONNX_FILE, verbose=True, opset_version=13, enable_onnx_checker=False)

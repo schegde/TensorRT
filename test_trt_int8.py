@@ -12,7 +12,7 @@ from polygraphy.comparator.data_loader import DataLoader
 import sys
 
 # Loaders
-parse_network_from_onnx = NetworkFromOnnxPath('./resnet50_quant.onnx')
+parse_network_from_onnx = NetworkFromOnnxPath('./resnet50_quant_batch1.onnx')
 create_trt_config = CreateTrtConfig(max_workspace_size=100000000, int8=True)
 build_engine = EngineFromNetwork(parse_network_from_onnx, config=create_trt_config)
 
