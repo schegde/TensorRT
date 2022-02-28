@@ -1,5 +1,5 @@
 import torch
-import torchvision
+from torchvision_cust.models.classification import resnet50 as r50
 # import sys
 # import os
 
@@ -29,15 +29,15 @@ from pytorch_quantization import nn as quant_nn
 from pytorch_quantization import quant_modules
 quant_nn.TensorQuantizer.use_fb_fake_quant = True
 quant_modules.initialize()
-model = torchvision.models.resnet50(pretrained=False, progress=False)
+model = r50(pretrained=False, quantize=True, progress=False)
 model.eval()
 model.cuda()
 
-batch_size = 1
-ONNX_FILE = "resnet50_quant_batch1.onnx"
+batch_size = 16
+ONNX_FILE = "resnet50_quant_opt.onnx"
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-state_dict = torch.load("/objdet/TensorRT/tools/pytorch-quantization/examples/quant_resnet50-calibrated.pth", map_location=device)
+state_dict = torch.load("/objdet/TensorRT/tools/pytorch-quantization/examples/quant_resnet50-calibrated-opt.pth", map_location=device)
 model.load_state_dict(state_dict)
 
 
